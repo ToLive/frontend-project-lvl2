@@ -11,7 +11,9 @@ const run = () => {
     program.version('0.0.1');
     
     program
-        .description('Compares two configuration files and shows a difference.');
+        .description('Compares two configuration files and shows a difference.')
+        .arguments('<filepath1> <filepath2>')
+        .option('-f, --format [type]', 'output format');
 
     program.parse();
 };
