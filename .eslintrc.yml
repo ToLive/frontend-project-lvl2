@@ -2,6 +2,7 @@
 
 plugins:
   - import
+  - jest
 
 env:
   node: true
@@ -9,6 +10,7 @@ env:
 
 extends:
   - 'airbnb-base'
+  - 'plugin:jest/recommended'
 
 parserOptions:
   ecmaVersion: 11
@@ -18,3 +20,4 @@ rules:
   no-console: 0
   import/extensions: 0
   no-await-in-loop: 0
+  no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }] # разрешает подчёркивание в именах только для двух констант
