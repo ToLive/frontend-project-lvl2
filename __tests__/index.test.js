@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import fs from 'fs';
+import * as fs from 'fs';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import { generateDiff } from '../src/index.js';
