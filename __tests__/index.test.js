@@ -16,7 +16,39 @@ describe('testing plain json', () => {
     const filepath2 = getFixturePath('plain2.json');
 
     const testedString = generateDiff(filepath1, filepath2);
-    const referenceString = readFile('plainjsonResult.txt');
+    const referenceString = readFile('plainJsonCompare.txt');
+
+    expect(testedString).toMatch(referenceString);
+  });
+
+  test('plain json reverse compare', () => {
+    const filepath1 = getFixturePath('plain2.json');
+    const filepath2 = getFixturePath('plain1.json');
+
+    const testedString = generateDiff(filepath1, filepath2);
+    const referenceString = readFile('plainJsonReverseCompare.txt');
+
+    expect(testedString).toMatch(referenceString);
+  });
+});
+
+describe('testing plain yaml', () => {
+  test('plain yaml compare', () => {
+    const filepath1 = getFixturePath('plain1.yml');
+    const filepath2 = getFixturePath('plain2.yml');
+
+    const testedString = generateDiff(filepath1, filepath2);
+    const referenceString = readFile('plainYamlCompare.txt');
+
+    expect(testedString).toMatch(referenceString);
+  });
+
+  test('plain yaml reverse compare', () => {
+    const filepath1 = getFixturePath('plain2.yml');
+    const filepath2 = getFixturePath('plain1.yml');
+
+    const testedString = generateDiff(filepath1, filepath2);
+    const referenceString = readFile('plainYamlReverseCompare.txt');
 
     expect(testedString).toMatch(referenceString);
   });

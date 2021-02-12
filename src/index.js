@@ -1,14 +1,15 @@
 import program from 'commander';
 import path from 'path';
-import fs from 'fs';
 import _ from 'lodash';
+import parseFile from './parsers.js';
 
 const generateDiff = (path1, path2) => {
   const fullPathToFile1 = path.resolve(process.cwd(), path1);
   const fullPathToFile2 = path.resolve(process.cwd(), path2);
 
-  const file1Content = JSON.parse(fs.readFileSync(fullPathToFile1));
-  const file2Content = JSON.parse(fs.readFileSync(fullPathToFile2));
+  const file1Content = parseFile(fullPathToFile1);
+  const file2Content = parseFile(fullPathToFile2);
+
   const file1Keys = Object.keys(file1Content);
   const file2Keys = Object.keys(file2Content);
 

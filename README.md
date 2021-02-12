@@ -4,3 +4,7 @@
 
 Stage 3. Plain json compare
 [![asciicast](https://asciinema.org/a/w7AacnpmlmOuWc99TBVl2wSMy.svg)](https://asciinema.org/a/w7AacnpmlmOuWc99TBVl2wSMy)
+
+
+Stage 5. Plain yaml compare
+[![asciicast](https://asciinema.org/a/2FInx3P5DyjmBSVjbtmyycoIH.svg)](https://asciinema.org/a/2FInx3P5DyjmBSVjbtmyycoIH)
