@@ -1,24 +1,24 @@
 import _ from 'lodash';
 
-const format = (value, replacer = '    ', spacesCount = 1) => {
-  function formatDiff(valueType, diffType) {
-    if (diffType === '+') {
-      return '+ ';
-    }
-
-    if (diffType === '-') {
-      return '- ';
-    }
-
-    if (valueType === 'primitive') {
-      if (diffType === '<>') {
-        return '<>';
-      }
-    }
-
-    return '  ';
+function formatDiff(valueType, diffType) {
+  if (diffType === '+') {
+    return '+ ';
   }
 
+  if (diffType === '-') {
+    return '- ';
+  }
+
+  if (valueType === 'primitive') {
+    if (diffType === '<>') {
+      return '<>';
+    }
+  }
+
+  return '  ';
+}
+
+const format = (value, replacer = '    ', spacesCount = 1) => {
   const iter = (currentValue, depth) => {
     if (currentValue === null) {
       return 'null';

@@ -60,7 +60,7 @@ function difference(merged, left, right) {
         .map(([key, value]) => iter(value, key, valueLeft, valueRight))
       : currentValue;
 
-    const result = {
+    return {
       name: currentKey,
       type: _.isObject(currentValue) ? 'object' : 'primitive',
       diff: currentDiffType,
@@ -68,8 +68,6 @@ function difference(merged, left, right) {
       valueLeft,
       valueRight,
     };
-
-    return result;
   };
 
   return deepSortObject(iter(merged, null, left, right));
