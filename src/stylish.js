@@ -2,32 +2,18 @@ import _ from 'lodash';
 
 const format = (value, replacer = '    ', spacesCount = 1) => {
   function formatDiff(valueType, diffType) {
-    if (valueType === 'object') {
-      if (diffType === '+') {
-        return '+ ';
-      }
+    if (diffType === '+') {
+      return '+ ';
+    }
 
-      if (diffType === '-') {
-        return '- ';
-      }
-
-      return '  ';
+    if (diffType === '-') {
+      return '- ';
     }
 
     if (valueType === 'primitive') {
-      if (diffType === '+') {
-        return '+ ';
-      }
-
-      if (diffType === '-') {
-        return '- ';
-      }
-
       if (diffType === '<>') {
         return '<>';
       }
-
-      return '  ';
     }
 
     return '  ';
