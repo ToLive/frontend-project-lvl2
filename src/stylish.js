@@ -11,15 +11,18 @@ function formatDiff(valueType, diffType) {
 
   if (valueType === 'primitive') {
     if (diffType === '<>') {
-      return '<>';
+      return '- ';
     }
   }
 
   return '  ';
 }
 
-const format = (value, replacer = '    ', spacesCount = 1) => {
+const format = (inputDiff, replacer = '    ', spacesCount = 1) => {
   const iter = (currentValue, depth) => {
+    const getObjectValue = (val, dep) => `${_.isObject(val) ? iter(Object.entries(val), dep + 1) : val}`;
+    const getValue = (val) => (_.isObject(val) ? Object.entries(val) : val);
+
     if (currentValue === null) {
       return 'null';
     }
@@ -33,18 +36,26 @@ const format = (value, replacer = '    ', spacesCount = 1) => {
     const bracketIndent = replacer.repeat(indentSize - spacesCount);
 
     const lines = currentValue.map((item) => {
-      if (!item.type) {
-        return `${currentIndent}  ${item[0]}: ${_.isObject(item[1]) ? iter(Object.entries(item[1]), depth + 1) : item[1]}`;
+      const {
+        name,
+        type,
+        diff,
+        value,
+        valueLeft,
+        valueRight,
+      } = item;
+
+      if (!type) {
+        return `${currentIndent}  ${item[0]}: ${getObjectValue(item[1], depth)}`;
       }
 
-      let newKey = `${currentIndent}${formatDiff(item.type, item.diff)}${item.name}`;
+      const newKey = `${currentIndent}${formatDiff(type, diff)}${name}`;
 
-      let newValue = `${_.isArray(item.value) ? iter(item.value, depth + 1) : iter(_.isObject(item.value) ? Object.entries(item.value) : item.value, depth + 1)}`;
+      let newValue = `${_.isArray(value) ? iter(value, depth + 1) : iter(getValue(value), depth + 1)}`;
 
-      if (item.type === 'primitive' && item.diff === '<>'
-        && (!_.isObject(item.valueRight))) {
-        newKey = `${currentIndent}- ${item.name}`;
-        newValue = `${_.isObject(item.valueLeft) ? iter(Object.entries(item.valueLeft), depth + 1) : item.valueLeft}\n${currentIndent}+ ${item.name}: ${_.isObject(item.valueRight) ? iter(Object.entries(item.valueRight), depth + 1) : item.valueRight}`;
+      if (type === 'primitive' && diff === '<>'
+        && (!_.isObject(valueRight))) {
+        newValue = `${getObjectValue(valueLeft, depth)}\n${currentIndent}+ ${name}: ${getObjectValue(valueRight, depth)}`;
       }
 
       return `${newKey}: ${newValue}`;
@@ -57,7 +68,7 @@ const format = (value, replacer = '    ', spacesCount = 1) => {
     ].join('\n');
   };
 
-  return iter(value, 1);
+  return iter(inputDiff, 1);
 };
 
 export default format;
