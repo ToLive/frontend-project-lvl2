@@ -10,45 +10,23 @@ const __dirname = dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
-describe('testing plain json', () => {
-  test('plain json compare', () => {
-    const filepath1 = getFixturePath('plain1.json');
-    const filepath2 = getFixturePath('plain2.json');
+describe('testing complex files', () => {
+  test('complex json compare', () => {
+    const filepath1 = getFixturePath('complex1.json');
+    const filepath2 = getFixturePath('complex2.json');
 
     const testedString = generateDiff(filepath1, filepath2);
-    const referenceString = readFile('plainJsonCompare.txt');
+    const referenceString = readFile('complexCompare.txt');
 
     expect(testedString).toMatch(referenceString);
   });
 
-  test('plain json reverse compare', () => {
-    const filepath1 = getFixturePath('plain2.json');
-    const filepath2 = getFixturePath('plain1.json');
+  test('complex yaml compare', () => {
+    const filepath1 = getFixturePath('complex1.yml');
+    const filepath2 = getFixturePath('complex2.yml');
 
     const testedString = generateDiff(filepath1, filepath2);
-    const referenceString = readFile('plainJsonReverseCompare.txt');
-
-    expect(testedString).toMatch(referenceString);
-  });
-});
-
-describe('testing plain yaml', () => {
-  test('plain yaml compare', () => {
-    const filepath1 = getFixturePath('plain1.yml');
-    const filepath2 = getFixturePath('plain2.yml');
-
-    const testedString = generateDiff(filepath1, filepath2);
-    const referenceString = readFile('plainYamlCompare.txt');
-
-    expect(testedString).toMatch(referenceString);
-  });
-
-  test('plain yaml reverse compare', () => {
-    const filepath1 = getFixturePath('plain2.yml');
-    const filepath2 = getFixturePath('plain1.yml');
-
-    const testedString = generateDiff(filepath1, filepath2);
-    const referenceString = readFile('plainYamlReverseCompare.txt');
+    const referenceString = readFile('complexCompare.txt');
 
     expect(testedString).toMatch(referenceString);
   });
