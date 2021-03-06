@@ -1,5 +1,4 @@
 import program from 'commander';
-import path from 'path';
 import _ from 'lodash';
 import parseFile from './parsers.js';
 import stylish from './stylish.js';
@@ -32,53 +31,53 @@ function deepSortObject(obj) {
   return sort(obj);
 }
 
-const generateDiff = (path1, path2, formatter = stylish) => {
-  const file1Content = parseFile(path.resolve(process.cwd(), path1));
-  const file2Content = parseFile(path.resolve(process.cwd(), path2));
-
-  function diffType(left, right) {
-    if (left === undefined) {
-      return '+';
-    }
-
-    if (right === undefined) {
-      return '-';
-    }
-
-    if (_.isEqual(left, right)) {
-      return '=';
-    }
-
-    return '<>';
+function diffType(left, right) {
+  if (left === undefined) {
+    return '+';
   }
 
-  function difference(merged, left, right) {
-    const iter = (currentValue, currentKey = undefined, leftV, rightV) => {
-      const leftValue = currentKey && leftV ? leftV[currentKey] : leftV;
-      const rightValue = currentKey && rightV ? rightV[currentKey] : rightV;
+  if (right === undefined) {
+    return '-';
+  }
 
-      const currentDiffType = diffType(leftValue, rightValue);
+  if (_.isEqual(left, right)) {
+    return '=';
+  }
 
-      const resultValue = _.isObject(currentValue) && currentDiffType === '<>'
-        ? Object
-          .entries(currentValue)
-          .map(([key, value]) => iter(value, key, leftValue, rightValue))
-        : currentValue;
+  return '<>';
+}
 
-      const result = {
-        name: currentKey,
-        type: _.isObject(currentValue) ? 'object' : 'primitive',
-        diff: currentDiffType,
-        value: resultValue,
-        valueLeft: leftValue,
-        valueRight: rightValue,
-      };
+function difference(merged, left, right) {
+  const iter = (currentValue, currentKey = undefined, leftV, rightV) => {
+    const valueLeft = currentKey && leftV ? leftV[currentKey] : leftV;
+    const valueRight = currentKey && rightV ? rightV[currentKey] : rightV;
 
-      return result;
+    const currentDiffType = diffType(valueLeft, valueRight);
+
+    const resultValue = _.isObject(currentValue) && currentDiffType === '<>'
+      ? Object
+        .entries(currentValue)
+        .map(([key, value]) => iter(value, key, valueLeft, valueRight))
+      : currentValue;
+
+    const result = {
+      name: currentKey,
+      type: _.isObject(currentValue) ? 'object' : 'primitive',
+      diff: currentDiffType,
+      value: resultValue,
+      valueLeft,
+      valueRight,
     };
 
-    return deepSortObject(iter(merged, null, left, right));
-  }
+    return result;
+  };
+
+  return deepSortObject(iter(merged, null, left, right));
+}
+
+const generateDiff = (path1, path2, formatter = stylish) => {
+  const file1Content = parseFile(path1);
+  const file2Content = parseFile(path2);
 
   const mergedContent = {};
   _.merge(mergedContent, file1Content, file2Content);

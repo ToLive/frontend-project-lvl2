@@ -5,12 +5,14 @@ import yaml from 'js-yaml';
 const getFileExt = (filePath) => path.extname(filePath);
 
 const parseFile = (filePath) => {
-  if (getFileExt(filePath) === '.json') {
-    return JSON.parse(fs.readFileSync(filePath));
+  const resolvedPath = path.resolve(process.cwd(), filePath);
+
+  if (getFileExt(resolvedPath) === '.json') {
+    return JSON.parse(fs.readFileSync(resolvedPath));
   }
 
-  if (getFileExt(filePath) === '.yml') {
-    return yaml.load(fs.readFileSync(filePath));
+  if (getFileExt(resolvedPath) === '.yml') {
+    return yaml.load(fs.readFileSync(resolvedPath));
   }
 
   throw new Error('Unknown ext');
