@@ -1,7 +1,7 @@
 import program from 'commander';
 import _ from 'lodash';
 import parseFile from './parsers.js';
-import stylish from './stylish.js';
+import getFormatterByName from './formatters/index.js';
 
 function deepSortObject(obj) {
   function defaultSortFn(a, b) {
@@ -73,7 +73,7 @@ function difference(merged, left, right) {
   return deepSortObject(iter(merged, null, left, right));
 }
 
-const generateDiff = (path1, path2, formatter = stylish) => {
+const generateDiff = (path1, path2, formatter) => {
   const file1Content = parseFile(path1);
   const file2Content = parseFile(path2);
 
@@ -81,11 +81,12 @@ const generateDiff = (path1, path2, formatter = stylish) => {
   _.merge(mergedContent, file1Content, file2Content);
 
   const sortedMergedContent = deepSortObject(mergedContent);
+  const formatFunction = getFormatterByName(formatter);
 
-  return formatter(difference(sortedMergedContent, file1Content, file2Content).value);
+  return formatFunction(difference(sortedMergedContent, file1Content, file2Content).value);
 };
 
-const genDiff = (format = stylish) => {
+const genDiff = () => {
   program.configureHelp({
     sortSubcommands: true,
     subcommandTerm: (cmd) => cmd.name(),
@@ -97,8 +98,8 @@ const genDiff = (format = stylish) => {
     .description('Compares two configuration files and shows a difference.')
     .arguments('<filepath1> <filepath2>')
     .option('-f, --format [type]', 'output format', 'stylish')
-    .action((path1, path2) => {
-      const res = generateDiff(path1, path2, format);
+    .action((path1, path2, args) => {
+      const res = generateDiff(path1, path2, args.format);
 
       console.log(res);
     });

@@ -9,5 +9,8 @@ Stage 3. Plain json compare
 Stage 5. Plain yaml compare
 [![asciicast](https://asciinema.org/a/2FInx3P5DyjmBSVjbtmyycoIH.svg)](https://asciinema.org/a/2FInx3P5DyjmBSVjbtmyycoIH)
 
-Stage 6. Complex json and yaml compare
+Stage 6. Complex json and yaml compare (Stylish format)
 [![asciicast](https://asciinema.org/a/6tRoGvlAKYoXGTrQxSqMUsECL.svg)](https://asciinema.org/a/6tRoGvlAKYoXGTrQxSqMUsECL)
+
+Stage 7. Complex json and yaml compare (Plain format)
+[![asciicast](https://asciinema.org/a/SnmkRDOXGqCodzvB7L9NksDCS.svg)](https://asciinema.org/a/SnmkRDOXGqCodzvB7L9NksDCS)

@@ -7,12 +7,22 @@
         {
             "type": "pwa-node",
             "request": "launch",
-            "name": "Launch gendiff",
+            "name": "Launch gendiff S",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/bin/gendiff.js",
             "args": ["/home/tolive/Dev/hexlet/frontend-project-lvl2/__fixtures__/complex1.json", "/home/tolive/Dev/hexlet/frontend-project-lvl2/__fixtures__/complex2.json"]
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Launch gendiff P",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/bin/gendiff.js",
+            "args": ["-f", "plain", "/home/tolive/Dev/hexlet/frontend-project-lvl2/__fixtures__/complex1.json", "/home/tolive/Dev/hexlet/frontend-project-lvl2/__fixtures__/complex2.json"]
         }
     ]
 }
