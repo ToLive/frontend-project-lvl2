@@ -9,7 +9,7 @@
   },
   "main": "./src/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --colors"
   },
   "bin": {
     "gendiff": "bin/gendiff.js"
