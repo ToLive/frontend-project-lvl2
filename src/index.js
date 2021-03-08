@@ -8,14 +8,12 @@ function deepSortObject(obj) {
   }
 
   function sort(src, comparator) {
-    let out;
-
     if (Array.isArray(src)) {
       return src.map((item) => sort(item, comparator));
     }
 
     if (_.isObject(src)) {
-      out = {};
+      const out = {};
 
       Object.keys(src).sort(comparator || defaultSortFn).forEach((key) => {
         out[key] = sort(src[key], comparator);
