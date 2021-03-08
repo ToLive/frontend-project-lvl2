@@ -26,28 +26,31 @@ const formatStr = (str) => {
   return (typeof str === 'string' ? `'${str}'` : str.toString());
 };
 
+const isChangedObject = (type, diff) => (type === 'object' && diff === '<>');
+const isChangedPrimitive = (type, diff) => (type === 'primitive' && diff === '<>');
+const getValue = (val) => (_.isObject(val) ? '[complex value]' : formatStr(val));
+const getPlainValue = (val) => (val === null ? null : val.toString());
+
 const format = (inputDiff) => {
   const iter = (currentValue, currentPath = []) => {
     const getObjectValue = (val, name) => `${_.isObject(val) ? iter(Object.entries(val), [...currentPath, name]) : formatStr(val)}`;
-    const getValue = (val) => (_.isObject(val) ? '[complex value]' : formatStr(val));
-    const getPlainValue = (val) => (val === null ? null : val.toString());
 
     if (!_.isObject(currentValue)) {
       return getPlainValue(currentValue);
     }
 
-    const buildNewKey = (type, diff, path) => ((type === 'object' && diff === '<>')
+    const buildNewKey = (type, diff, path) => (isChangedObject(type, diff)
       ? ''
-      : `Property '${_.isArray(path) ? path.join('.') : path}'`);
+      : `Property '${path.join('.')}'`);
 
     const buildNewValue = (val, name, type, diff, valLeft, valRight) => {
       if (diff === '-') {
         return ` ${formatDiff(type, diff)}`;
       }
 
-      const diffStr = (type === 'object' && diff === '<>') ? '' : ` ${formatDiff(type, diff)}`;
+      const diffStr = isChangedObject(type, diff) ? '' : ` ${formatDiff(type, diff)}`;
 
-      if (type === 'primitive' && diff === '<>' && (!_.isObject(valRight))) {
+      if (isChangedPrimitive(type, diff) && !_.isObject(valRight)) {
         return ` ${formatDiff(type, diff)}From ${getValue(valLeft, name)} to ${getObjectValue(valRight, name)}`;
       }
 
