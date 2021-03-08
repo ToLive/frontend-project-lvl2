@@ -17,6 +17,10 @@
             key: value
           + ops: vops
         }
+      - setting7: true
+      + setting7: {
+            key: value
+        }
     }
     group1: {
       - baz: bas

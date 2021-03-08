@@ -1,4 +1,3 @@
-import program from 'commander';
 import _ from 'lodash';
 import parseFile from './parsers.js';
 import getFormatterByName from './formatters/index.js';

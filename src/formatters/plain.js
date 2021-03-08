@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-function formatDiff(valueType, diffType) {
+function formatDiff(valueType, diffType, valLeft, valRight) {
   if (diffType === '+') {
     return 'was added with value: ';
   }
@@ -10,6 +10,12 @@ function formatDiff(valueType, diffType) {
   }
 
   if (valueType === 'primitive') {
+    if (diffType === '<>') {
+      return 'was updated. ';
+    }
+  }
+
+  if (valueType === 'object' && !_.isObject(valLeft) && _.isObject(valRight)) {
     if (diffType === '<>') {
       return 'was updated. ';
     }
@@ -39,19 +45,24 @@ const format = (inputDiff) => {
       return getPlainValue(currentValue);
     }
 
-    const buildNewKey = (type, diff, path) => (isChangedObject(type, diff)
+    const buildNewKey = (type, diff, path, valLeft, valRight) => (isChangedObject(type, diff)
+    && _.isObject(valRight) && _.isObject(valLeft)
       ? ''
       : `Property '${path.join('.')}'`);
 
     const buildNewValue = (val, name, type, diff, valLeft, valRight) => {
       if (diff === '-') {
-        return ` ${formatDiff(type, diff)}`;
+        return ` ${formatDiff(type, diff, valLeft, valRight)}`;
       }
 
       const diffStr = isChangedObject(type, diff) ? '' : ` ${formatDiff(type, diff)}`;
 
       if (isChangedPrimitive(type, diff) && !_.isObject(valRight)) {
         return ` ${formatDiff(type, diff)}From ${getValue(valLeft, name)} to ${getObjectValue(valRight, name)}`;
+      }
+
+      if (isChangedObject(type, diff) && _.isObject(valRight) && !_.isObject(valLeft)) {
+        return ` ${formatDiff(type, diff, valLeft, valRight)}From ${getValue(valLeft, name)} to ${getValue(valRight, name)}`;
       }
 
       return `${diffStr}${_.isArray(val) ? iter(val, [...currentPath, name]) : iter(getValue(val, name), 1)}`;
@@ -68,7 +79,7 @@ const format = (inputDiff) => {
           valueRight,
         } = item;
 
-        const newKey = buildNewKey(type, diff, [...currentPath, name]);
+        const newKey = buildNewKey(type, diff, [...currentPath, name], valueLeft, valueRight);
         const newValue = buildNewValue(value, name, type, diff, valueLeft, valueRight);
 
         return (diff === '=')

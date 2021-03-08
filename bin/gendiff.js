@@ -15,10 +15,9 @@ program
   .allowUnknownOption()
   .option('-f, --format [type]', 'output format', 'stylish')
   .action((filepath1, filepath2, args) => {
-    //console.dir(program);
     const res = generateDiff(filepath1, filepath2, args.format);
 
-    console.dir(res);
+    console.log(res);
   });
 
 program.parse(process.argv);

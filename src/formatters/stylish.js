@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-function formatDiff(valueType, diffType) {
+function formatDiff(valueType, diffType, valLeft, valRight) {
   if (diffType === '+') {
     return '+ ';
   }
@@ -10,6 +10,12 @@ function formatDiff(valueType, diffType) {
   }
 
   if (valueType === 'primitive') {
+    if (diffType === '<>') {
+      return '- ';
+    }
+  }
+
+  if (valueType === 'object' && !_.isObject(valLeft) && _.isObject(valRight)) {
     if (diffType === '<>') {
       return '- ';
     }
@@ -31,11 +37,14 @@ const format = (inputDiff, replacer = '    ', spacesCount = 1) => {
     const indentSize = depth * spacesCount;
     const currentIndent = replacer.repeat(indentSize).slice(0, -2);
     const bracketIndent = replacer.repeat(indentSize - spacesCount);
-    const buildNewKey = (val, type, diff) => `${currentIndent}${formatDiff(type, diff)}${val}`;
+    const buildNewKey = (name, type, diff, valLeft, valRight) => `${currentIndent}${formatDiff(type, diff, valLeft, valRight)}${name}`;
 
     const buildNewValue = (val, name, dep, type, diff, valLeft, valRight) => {
-      if (type === 'primitive' && diff === '<>'
-        && (!_.isObject(valRight))) {
+      if (type === 'primitive' && diff === '<>' && (!_.isObject(valRight))) {
+        return `${getObjectValue(valLeft, dep)}\n${currentIndent}+ ${name}: ${getObjectValue(valRight, dep)}`;
+      }
+
+      if (type === 'object' && diff === '<>' && (!_.isObject(valLeft))) {
         return `${getObjectValue(valLeft, dep)}\n${currentIndent}+ ${name}: ${getObjectValue(valRight, dep)}`;
       }
 
@@ -56,7 +65,7 @@ const format = (inputDiff, replacer = '    ', spacesCount = 1) => {
         return `${buildNewKey(item[0], 'object', '<>')}: ${getObjectValue(item[1], depth)}`;
       }
 
-      const newKey = buildNewKey(name, type, diff);
+      const newKey = buildNewKey(name, type, diff, valueLeft, valueRight);
       const newValue = buildNewValue(value, name, depth, type, diff, valueLeft, valueRight);
 
       return `${newKey}: ${newValue}`;
