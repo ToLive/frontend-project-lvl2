@@ -97,6 +97,7 @@ const genDiff = () => {
   program
     .description('Compares two configuration files and shows a difference.')
     .arguments('<filepath1> <filepath2>')
+    .allowUnknownOption()
     .option('-f, --format [type]', 'output format', 'stylish')
     .action((path1, path2, args) => {
       const res = generateDiff(path1, path2, args.format);
