@@ -3,10 +3,6 @@ import parseFile from './parsers.js';
 import getFormatterByName from './formatters/index.js';
 
 function deepSortObject(obj) {
-  function defaultSortFn(a, b) {
-    return a.localeCompare(b);
-  }
-
   function sort(src, comparator) {
     if (Array.isArray(src)) {
       return src.map((item) => sort(item, comparator));
@@ -15,7 +11,7 @@ function deepSortObject(obj) {
     if (_.isObject(src)) {
       const out = {};
 
-      Object.keys(src).sort(comparator || defaultSortFn).forEach((key) => {
+      _.sortBy(Object.keys(src)).forEach((key) => {
         out[key] = sort(src[key], comparator);
       });
 
