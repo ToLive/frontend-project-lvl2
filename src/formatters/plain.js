@@ -18,17 +18,17 @@ function formatDiff(valueType, diffType) {
   return 'was not changed';
 }
 
+const formatStr = (str) => {
+  if (str === null) {
+    return null;
+  }
+
+  return (typeof str === 'string' ? `'${str}'` : str.toString());
+};
+
 const format = (inputDiff) => {
-  const iter = (currentValue, depth, currentPath = []) => {
-    const formatStr = (str) => {
-      if (str === null) {
-        return null;
-      }
-
-      return (typeof str === 'string' ? `'${str}'` : str.toString());
-    };
-
-    const getObjectValue = (val, dep, name) => `${_.isObject(val) ? iter(Object.entries(val), dep + 1, [...currentPath, name]) : formatStr(val)}`;
+  const iter = (currentValue, currentPath = []) => {
+    const getObjectValue = (val, name) => `${_.isObject(val) ? iter(Object.entries(val), [...currentPath, name]) : formatStr(val)}`;
     const getValue = (val) => (_.isObject(val) ? '[complex value]' : formatStr(val));
     const getPlainValue = (val) => (val === null ? null : val.toString());
 
@@ -36,55 +36,50 @@ const format = (inputDiff) => {
       return getPlainValue(currentValue);
     }
 
-    const buildNewKey = (val, type, diff, path) => {
-      if (type === 'object' && diff === '<>') {
-        return '';
-      }
+    const buildNewKey = (type, diff, path) => ((type === 'object' && diff === '<>')
+      ? ''
+      : `Property '${_.isArray(path) ? path.join('.') : path}'`);
 
-      return `Property '${_.isArray(path) ? path.join('.') : path}'`;
-    };
-
-    const buildNewValue = (val, name, dep, type, diff, valLeft, valRight) => {
+    const buildNewValue = (val, name, type, diff, valLeft, valRight) => {
       if (diff === '-') {
         return ` ${formatDiff(type, diff)}`;
       }
 
       const diffStr = (type === 'object' && diff === '<>') ? '' : ` ${formatDiff(type, diff)}`;
 
-      if (type === 'primitive' && diff === '<>'
-        && (!_.isObject(valRight))) {
-        return ` ${formatDiff(type, diff)}From ${getValue(valLeft, dep, name)} to ${getObjectValue(valRight, dep, name)}`;
+      if (type === 'primitive' && diff === '<>' && (!_.isObject(valRight))) {
+        return ` ${formatDiff(type, diff)}From ${getValue(valLeft, name)} to ${getObjectValue(valRight, name)}`;
       }
 
-      return `${diffStr}${_.isArray(val) ? iter(val, dep + 1, [...currentPath, name]) : iter(getValue(val, dep, name), 1)}`;
+      return `${diffStr}${_.isArray(val) ? iter(val, [...currentPath, name]) : iter(getValue(val, name), 1)}`;
     };
 
-    const lines = currentValue.map((item) => {
-      const {
-        name,
-        type,
-        diff,
-        value,
-        valueLeft,
-        valueRight,
-      } = item;
+    const lines = currentValue
+      .map((item) => {
+        const {
+          name,
+          type,
+          diff,
+          value,
+          valueLeft,
+          valueRight,
+        } = item;
 
-      if (diff === '=') {
-        return undefined;
-      }
+        const newKey = buildNewKey(type, diff, [...currentPath, name]);
+        const newValue = buildNewValue(value, name, type, diff, valueLeft, valueRight);
 
-      const newKey = buildNewKey(name, type, diff, [...currentPath, name]);
-      const newValue = buildNewValue(value, name, depth, type, diff, valueLeft, valueRight);
-
-      return `${newKey}${newValue}`;
-    });
+        return (diff === '=')
+          ? undefined
+          : `${newKey}${newValue}`;
+      })
+      .filter((item) => item !== undefined);
 
     return [
       ...lines,
-    ].filter((item) => item !== undefined).join('\n');
+    ].join('\n');
   };
 
-  return iter(inputDiff, 1);
+  return iter(inputDiff);
 };
 
 export default format;
