@@ -17,7 +17,7 @@ const parseFile = (filePath) => {
     case '.yaml':
       return yaml.load(fs.readFileSync(resolvedPath));
     default:
-      throw new Error('Unknown ext');
+      throw new Error(`Unknown ext from ${filePath}`);
   }
 };
 
