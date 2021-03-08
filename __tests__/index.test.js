@@ -53,3 +53,25 @@ describe('testing complex files, plain', () => {
     expect(testedString).toMatch(referenceString);
   });
 });
+
+describe('testing complex files, json', () => {
+  test('complex json compare', () => {
+    const filepath1 = getFixturePath('complex1.json');
+    const filepath2 = getFixturePath('complex2.json');
+
+    const testedString = generateDiff(filepath1, filepath2, 'json');
+    const referenceString = readFile('complexJsonCompare.txt');
+
+    expect(testedString).toMatch(referenceString);
+  });
+
+  test('complex yaml compare', () => {
+    const filepath1 = getFixturePath('complex1.yml');
+    const filepath2 = getFixturePath('complex2.yml');
+
+    const testedString = generateDiff(filepath1, filepath2, 'json');
+    const referenceString = readFile('complexJsonCompare.txt');
+
+    expect(testedString).toMatch(referenceString);
+  });
+});

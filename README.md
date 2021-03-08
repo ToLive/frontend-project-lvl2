@@ -14,3 +14,6 @@ Stage 6. Complex json and yaml compare (Stylish format)
 
 Stage 7. Complex json and yaml compare (Plain format)
 [![asciicast](https://asciinema.org/a/SnmkRDOXGqCodzvB7L9NksDCS.svg)](https://asciinema.org/a/SnmkRDOXGqCodzvB7L9NksDCS)
+
+Stage 8. Complex json and yaml compare (Json format)
+[![asciicast](https://asciinema.org/a/kpCVhMMQyqLliFxACnm1g4jvz.svg)](https://asciinema.org/a/kpCVhMMQyqLliFxACnm1g4jvz)

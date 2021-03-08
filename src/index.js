@@ -101,7 +101,7 @@ const genDiff = () => {
     .action((path1, path2, args) => {
       const res = generateDiff(path1, path2, args.format);
 
-      console.log(res);
+      console.dir(res);
     });
 
   program.parse();
