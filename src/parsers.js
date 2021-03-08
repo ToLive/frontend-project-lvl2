@@ -7,8 +7,6 @@ const getFileExt = (filePath) => path.extname(filePath);
 const parseFile = (filePath) => {
   const resolvedPath = path.resolve(process.cwd(), filePath);
 
-  console.log(resolvedPath);
-
   switch (getFileExt(resolvedPath)) {
     case '.json':
       return JSON.parse(fs.readFileSync(resolvedPath));
