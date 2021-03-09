@@ -3,19 +3,19 @@ import parseFile from './parsers.js';
 import getFormatterByName from './formatters/index.js';
 
 function deepSortObject(obj) {
-  function sort(src, comparator) {
+  function sort(src) {
     if (Array.isArray(src)) {
-      return src.map((item) => sort(item, comparator));
+      return src.map((item) => sort(item));
     }
 
     if (_.isObject(src)) {
-      const out = {};
+      const m = _.sortBy(Object.keys(src));
 
-      _.sortBy(Object.keys(src)).forEach((key) => {
-        out[key] = sort(src[key], comparator);
-      });
+      return m.reduce((acc, key) => {
+        _.set(acc, key, sort(src[key]));
 
-      return out;
+        return acc;
+      }, {});
     }
 
     return src;

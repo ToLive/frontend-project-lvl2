@@ -3,6 +3,7 @@
 plugins:
   - import
   - jest
+  - fp
 
 env:
   node: true
@@ -11,6 +12,7 @@ env:
 extends:
   - 'airbnb-base'
   - 'plugin:jest/recommended'
+  - 'plugin:fp/recommended'
 
 parserOptions:
   ecmaVersion: 11
@@ -18,6 +20,9 @@ parserOptions:
 
 rules:
   no-console: 0
+  fp/no-nil: 0
+  fp/no-unused-expression: 0
+  fp/no-throw: 0
   import/extensions: 0
   no-await-in-loop: 0
   no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }] # разрешает подчёркивание в именах только для двух констант
